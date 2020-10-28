@@ -33,6 +33,14 @@ looks like these configs get saved to the local .env file
 8. The installation completed fine, and I was able to set up the initial admin user (same as above) for the P.sh service. (Also initializing those tables)
 9. Since that set up the db, I could the redeploy the project, giving me a functioning admin panel on P.sh.
 
+TODO:
+
+- Really it just looks like I need to be able to call the DB create commands on first deploy (creating the platformsh.installed file)
+- Read through in app docs, try and do some things
+- Isolate in a repo
+- contact directus
+- demonstrate template-builder, or otherwise use the designated upstream 
+
 Problems still:
 - initalize db & admin user on first install
 - mount points, check out some common features.
