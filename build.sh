@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e 
+
 if [ -n "$(ls -A extensions  2>/dev/null)" ]; then
     mkdir extensions-temp && mv extensions/* extensions-tmp
 fi        

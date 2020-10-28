@@ -4,7 +4,7 @@
 # See https://docs.platform.sh/configuration/app.html
 
 # The name of this app. Must be unique within a project.
-name: app
+name: appb
 
 # The runtime the application uses. Strapi not yet suppported with NodeJS 14.
 type: nodejs:12
@@ -53,6 +53,9 @@ mounts:
     'uploads':
         source: local
         source_path: uploads
+    'var':
+        source: local
+        source_path: var
 
 # The relationships of the application with services or other applications.
 #
