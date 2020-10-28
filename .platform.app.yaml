@@ -4,7 +4,7 @@
 # See https://docs.platform.sh/configuration/app.html
 
 # The name of this app. Must be unique within a project.
-name: appe
+name: app
 
 # The runtime the application uses. Strapi not yet suppported with NodeJS 14.
 type: nodejs:12
@@ -63,4 +63,4 @@ mounts:
 # to the application in the PLATFORM_RELATIONSHIPS variable. The right-hand
 # side is in the form `<service name>:<endpoint name>`.
 relationships:
-  database: "dbpostgrese:postgresql"
+  database: "dbpostgres:postgresql"
