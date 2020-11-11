@@ -9,14 +9,14 @@ moveDevelopmentDirs() {
     # 
     # NOTE: If updating, make sure to update the matching 
     #   restoreDevelopmentDirs in deploy.sh.
-    mkdir extensions-temp && cp -r extensions/* extensions-tmp
-    mkdir uploads-temp && cp -r uploads/* uploads-tmp
-    # if [ -n "$(ls -A extensions  2>/dev/null)" ]; then
-    #     mkdir extensions-temp && cp -r extensions/* extensions-tmp
-    # fi   
-    # if [ -n "$(ls -A uploads 2>/dev/null)" ]; then
-    #     mkdir uploads-temp && cp -r uploads/* uploads-tmp
-    # fi   
+    # mkdir extensions-tmp && cp -r extensions/* extensions-tmp
+    # mkdir uploads-tmp && cp -r uploads/* uploads-tmp
+    if [ -n "$(ls -A extensions  2>/dev/null)" ]; then
+        mkdir extensions-tmp && cp -r extensions/* extensions-tmp
+    fi   
+    if [ -n "$(ls -A uploads 2>/dev/null)" ]; then
+        mkdir uploads-tmp && cp -r uploads/* uploads-tmp
+    fi   
 }
 
 set -e
