@@ -45,24 +45,27 @@ web:
 disk: 1024
 
 mounts:
-    'extensions/displays':
+    'extensions':
         source: local
-        source_path: displays
-    'extensions/endpoints':
-        source: local
-        source_path: endpoints
-    'extensions/hooks':
-        source: local
-        source_path: hooks
-    'extensions/interfaces':
-        source: local
-        source_path: interfaces
-    'extensions/layouts':
-        source: local
-        source_path: layouts
-    'extensions/modules':
-        source: local
-        source_path: modules
+        source_path: extensions
+    # 'extensions/displays':
+    #     source: local
+    #     source_path: displays
+    # 'extensions/endpoints':
+    #     source: local
+    #     source_path: endpoints
+    # 'extensions/hooks':
+    #     source: local
+    #     source_path: hooks
+    # 'extensions/interfaces':
+    #     source: local
+    #     source_path: interfaces
+    # 'extensions/layouts':
+    #     source: local
+    #     source_path: layouts
+    # 'extensions/modules':
+    #     source: local
+    #     source_path: modules
     'uploads':
         source: local
         source_path: uploads
