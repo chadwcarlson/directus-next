@@ -9,10 +9,10 @@ moveDevelopmentDirs() {
     # 
     # NOTE: If updating, make sure to update the matching 
     #   restoreDevelopmentDirs in deploy.sh.
-    declare -a dirs=(
+    declare -a dirs={
                 "extensions" 
                 "uploads" 
-                )
+                }
 
     for dir in "${dirs[@]}"
     do
