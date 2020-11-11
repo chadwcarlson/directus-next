@@ -36,10 +36,18 @@ web:
     commands:
         start: npx directus start
 
-# source:
-#     operations:
-#         npm-update: "blah"
-#         upstream-update: "blahblah"
+source:
+    operations:
+        npm-update:
+            command: |
+                set -e
+                npm update
+                git add package-lock.json
+                git commit -m "Update npm dependencies."    
+        upstream-update:
+            command: |
+                set -e       
+
 
 # The size of the persistent disk of the application (in MB).
 disk: 1024
