@@ -9,6 +9,7 @@ moveDevelopmentDirs() {
     # 
     # NOTE: If updating, make sure to update the matching 
     #   restoreDevelopmentDirs in deploy.sh.
+    ls
     if [ -n "$(ls -A extensions  2>/dev/null)" ]; then
         mkdir extensions-temp && mv extensions/* extensions-tmp
     fi   
