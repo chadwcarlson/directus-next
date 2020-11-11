@@ -9,17 +9,12 @@ moveDevelopmentDirs() {
     # 
     # NOTE: If updating, make sure to update the matching 
     #   restoreDevelopmentDirs in deploy.sh.
-    declare -a dirs={
-                "extensions" 
-                "uploads" 
-                }
-
-    for dir in "${dirs[@]}"
-    do
-        if [ -n "$(ls -A "$dir"  2>/dev/null)" ]; then
-            mkdir "$dir"-temp && mv "$dir"/* "$dir"-tmp
-        fi     
-    done
+    if [ -n "$(ls -A extensions  2>/dev/null)" ]; then
+        mkdir extensions-temp && mv extensions/* extensions-tmp
+    fi   
+    if [ -n "$(ls -A uploads 2>/dev/null)" ]; then
+        mkdir uploads-temp && mv uploads/* uploads-tmp
+    fi   
 }
 
 set -e

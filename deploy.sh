@@ -10,17 +10,12 @@ restoreDevelopmentDirs() {
     # 
     # NOTE: If updating, make sure to update the matching 
     #   moveDevelopmentDirs in build.sh.
-    declare -a dirs=(
-                "extensions" 
-                "uploads" 
-                )
-
-    for dir in "${dirs[@]}"
-    do
-        if [ -n "$(ls -A "$dir"-tmp 2>/dev/null)" ]; then
-            cp -r "$dir"-tmp/* "$dir"
-        fi    
-    done
+    if [ -n "$(ls -A extensions  2>/dev/null)" ]; then
+        cp -r extensions-tmp/* extensions
+    fi   
+    if [ -n "$(ls -A uploads 2>/dev/null)" ]; then
+        cp -r uploads-tmp/* uploads
+    fi  
 }
 
 initializeDB() {
