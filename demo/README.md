@@ -16,10 +16,17 @@ All of the above attributes are defined in `config.json`.
 {
     "region": "us-4.platform.sh",
     "plan": "development",
-    "project_prefix": "directus-demo",
+    "project_prefix": "Directus demo | ",
     "upstream": {
-        "repository": "https://github.com/chadwcarlson/directus-next",
+        "repository": "https://github.com/chadwcarlson/directus-next.git",
         "profile": "Directus Demo"
+    },
+    "activity_scripts": [
+        "slack.js"
+    ],
+    "updates": {
+        "environment_name": "directus-updates",
+        "title": "Directus updates"
     }
 }
 ```
@@ -41,7 +48,9 @@ All of the above attributes are defined in `config.json`.
 - Run `./fleet.sh redeploy SUBCRIPTIONID`. This will redeploy the Master environment, giving you a freshly initialized project now with access to fleet.
 - Run `./fleet.sh createUpdatesBranch SUBSCRIPTIONID`. This sets up a dedicated branch for dependency and upstream updates on the project.
 
-> **Note:** Repeat the steps above for each of the project you want to add to the fleet.
+> **Note:** 
+>
+> Repeat the steps above for each additional project you want to add to the fleet.
 
 ## Goals
 
