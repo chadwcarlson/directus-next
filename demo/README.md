@@ -61,9 +61,11 @@ Additionally, you're likely going to want to develop some kind of GUI to manage 
 - Run `./fleet.sh new "Client 1"` to create a project in the fleet. This will only take a moment. 
 - Run `./fleet.sh list`. You should now see the project listed for your fleet. Visit the management console url listed for that command. 
 - Run `./fleet.sh init SUBSCRIPTIONID`. Initialize Master environment on the current project with the upstream repository and profile name.
-- Run `./fleet.sh initVars SUBSCRIPTIONID`. Initialize *project*-wide environment variables according to the fleet configuration.
+- Run `./fleet.sh initVars SUBSCRIPTIONID`. Initialize *project*-level environment variables according to the fleet configuration.
 - Run `./fleet.sh redeploy SUBCRIPTIONID`. This will redeploy the Master environment, giving you a freshly initialized project now with access to fleet.
 - Run `./fleet.sh createUpdatesBranch SUBSCRIPTIONID`. This sets up a dedicated branch for dependency and upstream updates on the project.
+- Run `./fleet.sh addActivityScript SUBCRIPTIONID`. This adds the local `slack.js` activity script to the project, which will send slack messages from the dedicated updates branch when a source operation has completed. It's at this point where you can enter the Webhook URL of the Slack channel you want notifications to be sent to, which will be added as a *project*-level environment variable.
+- Run `./fleet.sh redeploy SUBCRIPTIONID directus-updates` to update the evironments's access to the new environment variable.
 
 > **Note:** 
 >
@@ -71,12 +73,7 @@ Additionally, you're likely going to want to develop some kind of GUI to manage 
 
 ### Managing projects in the fleet
 
-## Goals
 
-- I want to manage a fleet of websites on Platform.sh.
-- Each website (project) in that fleet should be initialized to the same project code upstream.
-- I want to be able to add and remove individual projects from that fleet.
-- I want 
 
 ## Important concepts and resources
 
@@ -91,7 +88,6 @@ Additionally, you're likely going to want to develop some kind of GUI to manage 
 - [Admiral: a Fleet Management GUI Reference in Symfony](https://github.com/platformsh/admiral)
 - [Blog - Source Operations: automate maintenance, from single sites to fleets](https://platform.sh/blog/2019/website-fleet/automating-updates-source-operations/)
 - [Blog - Admiral: How to keep your fleet afloat](https://platform.sh/blog/2019/website-fleet/admiral-an-example-of-website-fleet-automation/)
-
 
 ## Limitations
 
@@ -123,5 +119,5 @@ Running `./fleet.sh`:
 - `init SUBSCRIPTION_ID`: Initializes project with "Fleet template", first providing a list to retrieve `SUBSCRIPTION_ID`.
 - `initVars SUBSCRIPTION_ID`: Adds fleet environment variables to a project.
 - `redeploy SUBSCRIPTION_ID`: Saves changes from the initialization steps, completing a new running project.
-
+- `cleanup`: When you are finished with the demo, you can use this command to delete the demo fleet from Platform.sh.
 

@@ -49,6 +49,7 @@ list() {
     PROJECTS=$(curl -s -X GET \
         -H "$HEADER" -H "$AUTH" \
         https://api.platform.sh/subscriptions ) 
+    
     NUMPROJECTS=$(echo $PROJECTS | jq -r --arg PROJECT_PREFIX "$PROJECT_PREFIX" '.subscriptions | to_entries[] | select(.value.project_title | contains($PROJECT_PREFIX))')
     if [[ $NUMPROJECTS ]]; then
         echo -e "\nProjects in your fleet:\n\nid\tproject_id\tproject_title\t\t\tproject_ui\n"
@@ -77,9 +78,6 @@ addFleetVariables(){
     addProjectVariable --id="$1" --key="PLATFORMSH_CLI_TOKEN" --value="$PLATFORMSH_API_TOKEN" --sensitive=true
     # Add Upstream repo environment variable
     addProjectVariable --id="$1" --key="UPSTREAM_REPO" --value="$FLEET_REPO" --sensitive=false
-    # Request and add Slack token & channel variables
-    read -p "* Enter the client's Slack URL: "  slack_url_input
-    addProjectVariable --id="$1" --key="SLACK_URL" --value="$slack_url_input" --sensitive=true
 }
 
 # Prompt to allow single subscription ID to be passed.
@@ -149,6 +147,7 @@ new() {
                 "plan": "'"$PSH_PLAN"'"
             }' \
             https://api.platform.sh/subscriptions)
+
         echo -e "\nCreate project ($PROJECT_PREFIX$1) on Platform.sh requested.\nGive it a moment, then run 'init' to initialize the project.\n"
     fi
 }
@@ -182,6 +181,7 @@ initMaster() {
     PROJECT_ID=$(echo $PROJECT_INFO | jq -r '.project_id')
     PROJECT_UI=$(echo $PROJECT_INFO | jq -r '.project_ui')
     echo -e "\nInitializing master environment on project $PROJECT_TITLE ($PROJECT_ID)...\n"
+
     # Initialize the master environment with upstream profile.
     AUTH="Authorization: Bearer $(refreshOAuthToken)"
     RESPONSE=$(curl -s -X POST \
@@ -191,6 +191,7 @@ initMaster() {
             "repository": "'"$FLEET_REPO"'"
         }' \
         https://api.platform.sh/projects/$PROJECT_ID/environments/master/initialize)
+
     # Return status.
     echo -e "\nMaster environment $PROJECT_TITLE ($PROJECT_ID) initialized:\n\tProfile:\t'$FLEET_PROFILE'\n\tRepository:\t$FLEET_REPO\n\nView it at $PROJECT_UI/master.\n"
 }
@@ -214,6 +215,7 @@ deleteProject() {
     curl -X DELETE \
         -H "$HEADER" -H "$AUTH" \
         https://api.platform.sh/subscriptions/$1 
+
     echo -e "\nProject deleted.\n"
 }
 
@@ -243,12 +245,23 @@ deleteFleet() {
     PROJECTS=$(curl -s -X GET \
         -H "$HEADER" -H "$AUTH" \
         https://api.platform.sh/subscriptions ) 
-    FLEET=$(echo $PROJECTS | jq -r --arg PROJECT_PREFIX "$PROJECT_PREFIX" '.subscriptions | to_entries[] | select(.value.project_title | contains($PROJECT_PREFIX)) | .value.id')
+
+    FLEET=$(echo $PROJECTS | jq -r --arg PROJECT_PREFIX "$PROJECT_PREFIX" '.subscriptions | to_entries[] | select(.value.project_title | contains($PROJECT_PREFIX)) | [ .value.id ]')
     echo $FLEET
-    for PROJECT_TO_DELETE in "${FLEET[@]}"
-    do
-        deleteProject $PROJECT_TO_DELETE
-    done
+    # my_string="Ubuntu;Linux Mint;Debian;Arch;Fedora"
+    # IFS=';' read -ra my_array <<< "$my_string"
+    # for i in "${my_array[@]}"
+    # do
+    #     echo $i
+    # done
+    # for PROJECT_TO_DELETE in "${FLEET[@]}"
+    # do
+    #     deleteProject $PROJECT_TO_DELETE
+    #     # echo -e "\n$PROJECT_TO_DELETE"
+    #     sleep 10
+    # done
+    # list
+    # echo -e "\nThanks for trying out the demo! Go forth and Deploy Friday!\n"
 }
 
 # Function for cleaning up demo on Platform.sh.
@@ -256,28 +269,32 @@ cleanup() {
     list
     read -p "Are you sure you want to delete your fleet? No turning back from that, friend. [y|N]: " deleteCase
     case $deleteCase in  
-        y|Y) deleteFleet $id;; 
+        y|Y) deleteFleet ;; 
         n|N|*) echo -e "\nYeah, better not.\n" ;; 
     esac
-    list
-    echo -e "Thanks for trying out the demo! Go forth and Deploy Friday!"
 }
 
 ############################################## ENVIRONMENT ACTIONS ##############################################
 
 # Redeploy the Master environment for a given subscription (project).
 redeploy() {
+    # Master environment by default. Second argument for environment name.
+    BRANCH="master"
+    if [[ $2 ]]; then 
+        unset $BRANCH && BRANCH=$2
+    fi
     # Get project ID from subscription ID.
     PROJECT_INFO=$(getProjectInfoFromSubscription $1)
     PROJECT_TITLE=$(echo $PROJECT_INFO | jq -r '.project_title')
     PROJECT_ID=$(echo $PROJECT_INFO | jq -r '.project_id')
     PROJECT_UI=$(echo $PROJECT_INFO | jq -r '.project_ui')
-    echo -e "\nRedploying master environment on project $PROJECT_TITLE ($PROJECT_ID)...\n"
-    # Initialize the master environment with upstream profile.
+    echo -e "\nRedploying $BRANCH environment on project $PROJECT_TITLE ($PROJECT_ID)...\n"
+
+    # Redeploy the environment.
     AUTH="Authorization: Bearer $(refreshOAuthToken)"
     RESPONSE=$(curl -s -X POST \
         -H "$HEADER" -H "$AUTH" \
-        https://api.platform.sh/projects/$PROJECT_ID/environments/master/redeploy)
+        https://api.platform.sh/projects/$PROJECT_ID/environments/$BRANCH/redeploy)
 }
 
 createUpdatesBranch() {
@@ -297,8 +314,51 @@ createUpdatesBranch() {
             "title": "'"$FLEET_UPDATES_TITLE"'"
         }' \
         https://api.platform.sh/projects/$PROJECT_ID/environments/master/branch)
+    # echo $RESPONSE | jq
+}
+
+getIntegrations() {
+    PROJECT_INFO=$(getProjectInfoFromSubscription $1)
+    PROJECT_TITLE=$(echo $PROJECT_INFO | jq -r '.project_title')
+    PROJECT_ID=$(echo $PROJECT_INFO | jq -r '.project_id')
+    PROJECT_UI=$(echo $PROJECT_INFO | jq -r '.project_ui')
+    AUTH="Authorization: Bearer $(refreshOAuthToken)"
+    RESPONSE=$(curl -s -X GET \
+        -H "$HEADER" -H "$AUTH" \
+        https://api.platform.sh/projects/$PROJECT_ID/integrations)
     echo $RESPONSE | jq
 }
+
+addActivityScript() {
+    PROJECT_INFO=$(getProjectInfoFromSubscription $1)
+    PROJECT_TITLE=$(echo $PROJECT_INFO | jq -r '.project_title')
+    PROJECT_ID=$(echo $PROJECT_INFO | jq -r '.project_id')
+    PROJECT_UI=$(echo $PROJECT_INFO | jq -r '.project_ui')
+
+    # Request and add Slack token & channel variables
+    read -p "* Enter the client's Slack URL: "  slack_url_input
+    addProjectVariable --id="$1" --key="SLACK_URL" --value="$slack_url_input" --sensitive=true
+
+    AUTH="Authorization: Bearer $(refreshOAuthToken)"
+    RESPONSE=$(curl -s -X POST \
+        -H "$HEADER" -H "$AUTH" \
+        -d '{
+            "type": "script",
+            "script": "./slack2.js",
+            "states": [
+                "complete"
+            ],
+            "events": [
+                "environment.source-operation"
+            ]
+        }' \
+        https://api.platform.sh/projects/$PROJECT_ID/integrations)
+    # echo $RESPONSE | jq
+}
+
+# runSourceOperation(){
+
+# }
 
 # merge() {
 
