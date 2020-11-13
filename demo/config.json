@@ -11,6 +11,10 @@
     ],
     "updates": {
         "environment_name": "directus-updates",
-        "title": "Directus updates"
+        "title": "Directus updates",
+        "operations": {
+            "dependencies": "npm-update",
+            "upstream": "upstream-update"
+        }
     }
 }

@@ -237,6 +237,32 @@ delete () {
     fi
 }
 
+# Delete the whole fleet.
+deleteFleet() {
+    AUTH="Authorization: Bearer $(refreshOAuthToken)"
+    PROJECTS=$(curl -s -X GET \
+        -H "$HEADER" -H "$AUTH" \
+        https://api.platform.sh/subscriptions ) 
+    FLEET=$(echo $PROJECTS | jq -r --arg PROJECT_PREFIX "$PROJECT_PREFIX" '.subscriptions | to_entries[] | select(.value.project_title | contains($PROJECT_PREFIX)) | .value.id')
+    echo $FLEET
+    for PROJECT_TO_DELETE in "${FLEET[@]}"
+    do
+        deleteProject $PROJECT_TO_DELETE
+    done
+}
+
+# Function for cleaning up demo on Platform.sh.
+cleanup() {
+    list
+    read -p "Are you sure you want to delete your fleet? No turning back from that, friend. [y|N]: " deleteCase
+    case $deleteCase in  
+        y|Y) deleteFleet $id;; 
+        n|N|*) echo -e "\nYeah, better not.\n" ;; 
+    esac
+    list
+    echo -e "Thanks for trying out the demo! Go forth and Deploy Friday!"
+}
+
 ############################################## ENVIRONMENT ACTIONS ##############################################
 
 # Redeploy the Master environment for a given subscription (project).
