@@ -6,7 +6,11 @@
         "repository": "https://github.com/chadwcarlson/directus-next.git",
         "profile": "Directus Demo"
     },
-    "scripts": [
+    "activity_scripts": [
         "slack.js"
-    ]
+    ],
+    "updates": {
+        "environment_name": "directus-updates",
+        "title": "Directus updates"
+    }
 }

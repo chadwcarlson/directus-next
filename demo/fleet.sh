@@ -11,6 +11,9 @@ PSH_PLAN=$(cat $CONFIG | jq -r '.plan')
 FLEET_PROFILE=$(cat $CONFIG | jq -r '.upstream.profile')
 FLEET_REPO=$(cat $CONFIG | jq -r '.upstream.repository')
 
+FLEET_UPDATES_BRANCH=$(cat $CONFIG | jq -r '.updates.environment_name')
+FLEET_UPDATES_TITLE=$(cat $CONFIG | jq -r '.updates.title')
+
 ############################################## AUTHENTICATION ##############################################
 
 # To make it easy, just save an API token in an uncommitted file called 'token'.
@@ -192,20 +195,6 @@ initMaster() {
     echo -e "\nMaster environment $PROJECT_TITLE ($PROJECT_ID) initialized:\n\tProfile:\t'$FLEET_PROFILE'\n\tRepository:\t$FLEET_REPO\n\nView it at $PROJECT_UI/master.\n"
 }
 
-redeploy() {
-    # Get project ID from subscription ID.
-    PROJECT_INFO=$(getProjectInfoFromSubscription $1)
-    PROJECT_TITLE=$(echo $PROJECT_INFO | jq -r '.project_title')
-    PROJECT_ID=$(echo $PROJECT_INFO | jq -r '.project_id')
-    PROJECT_UI=$(echo $PROJECT_INFO | jq -r '.project_ui')
-    echo -e "\nRedploying master environment on project $PROJECT_TITLE ($PROJECT_ID)...\n"
-    # Initialize the master environment with upstream profile.
-    AUTH="Authorization: Bearer $(refreshOAuthToken)"
-    RESPONSE=$(curl -s -X POST \
-        -H "$HEADER" -H "$AUTH" \
-        https://api.platform.sh/projects/$PROJECT_ID/environments/master/redeploy)
-}
-
 ############################################## DELETING PROJECTS ##############################################
 
 # Main delete function for projects in fleet.
@@ -239,6 +228,7 @@ deletePrompt() {
     esac
 }
 
+# Main delete project function
 delete () {
     if [[ $1 ]]; then
         deleteProject $1
@@ -247,12 +237,55 @@ delete () {
     fi
 }
 
+############################################## ENVIRONMENT ACTIONS ##############################################
 
+# Redeploy the Master environment for a given subscription (project).
+redeploy() {
+    # Get project ID from subscription ID.
+    PROJECT_INFO=$(getProjectInfoFromSubscription $1)
+    PROJECT_TITLE=$(echo $PROJECT_INFO | jq -r '.project_title')
+    PROJECT_ID=$(echo $PROJECT_INFO | jq -r '.project_id')
+    PROJECT_UI=$(echo $PROJECT_INFO | jq -r '.project_ui')
+    echo -e "\nRedploying master environment on project $PROJECT_TITLE ($PROJECT_ID)...\n"
+    # Initialize the master environment with upstream profile.
+    AUTH="Authorization: Bearer $(refreshOAuthToken)"
+    RESPONSE=$(curl -s -X POST \
+        -H "$HEADER" -H "$AUTH" \
+        https://api.platform.sh/projects/$PROJECT_ID/environments/master/redeploy)
+}
 
+createUpdatesBranch() {
+    # Get project ID from subscription ID.
+    PROJECT_INFO=$(getProjectInfoFromSubscription $1)
+    PROJECT_TITLE=$(echo $PROJECT_INFO | jq -r '.project_title')
+    PROJECT_ID=$(echo $PROJECT_INFO | jq -r '.project_id')
+    PROJECT_UI=$(echo $PROJECT_INFO | jq -r '.project_ui')
+    echo -e "\nCreating fleet update environment on project $PROJECT_TITLE ($PROJECT_ID)...\n"
+    # Initialize the master environment with upstream profile.
+    AUTH="Authorization: Bearer $(refreshOAuthToken)"
+    RESPONSE=$(curl -s -X POST \
+        -H "$HEADER" -H "$AUTH" \
+        -d '{
+            "name": "'"$FLEET_UPDATES_BRANCH"'",
+            "clone_parent": true,
+            "title": "'"$FLEET_UPDATES_TITLE"'"
+        }' \
+        https://api.platform.sh/projects/$PROJECT_ID/environments/master/branch)
+    echo $RESPONSE | jq
+}
 
-# createUpdatesBranch() {
+# merge() {
 
 # }
+
+# sync() {
+
+# }
+
+# backup () {
+
+# }
+
 
 
 

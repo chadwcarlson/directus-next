@@ -26,17 +26,22 @@ All of the above attributes are defined in `config.json`.
 
 ## Using the demo
 
-1. First, retrieve an API Token [from your Platform.sh account settings](https://docs.platform.sh/development/cli/api-tokens.html#obtaining-a-token). Copy and paste that token into a file called `demo/token`. This file is not committed, but the key will be used in multiple places across the demo. 
-2. Take a look at `config.json`. This object controls how each new project in the fleet will be initialized. 
-3. Run `./fleet.sh list`. You should see no projects in your fleet. 
-4. Set up a project in the fleet:
-    - Run `./fleet.sh new "Client 1"` to create a project in the fleet. This will only take a moment. 
-    - Run `./fleet.sh list`. You should now see the project listed for your fleet. Visit the management console url listed for that command. 
-    - Run `./fleet.sh init SUBSCRIPTIONID`. Initialize Master environment on the current project with the upstream repository and profile name.
-    - Run `./fleet.sh initVars SUBSCRIPTIONID`. Initialize *project*-wide environment variables according to the fleet configuration.
-    - Run `./fleet.sh redeploy SUBCRIPTIONID`. This will redeploy the Master environment, giving you a freshly initialized project now with access to fleet environment variables. 
-5. Repeat the steps in 4 for as many projects as you'd like in the fleet.
+### Getting started
 
+- First, retrieve an API Token [from your Platform.sh account settings](https://docs.platform.sh/development/cli/api-tokens.html#obtaining-a-token). Copy and paste that token into a file called `demo/token`. This file is not committed, but the key will be used in multiple places across the demo. 
+- Take a look at `config.json`. This object controls how each new project in the fleet will be initialized. 
+- Run `./fleet.sh list`. You should see no projects in your fleet. 
+
+### Setting up projects in the fleet
+
+- Run `./fleet.sh new "Client 1"` to create a project in the fleet. This will only take a moment. 
+- Run `./fleet.sh list`. You should now see the project listed for your fleet. Visit the management console url listed for that command. 
+- Run `./fleet.sh init SUBSCRIPTIONID`. Initialize Master environment on the current project with the upstream repository and profile name.
+- Run `./fleet.sh initVars SUBSCRIPTIONID`. Initialize *project*-wide environment variables according to the fleet configuration.
+- Run `./fleet.sh redeploy SUBCRIPTIONID`. This will redeploy the Master environment, giving you a freshly initialized project now with access to fleet.
+- Run `./fleet.sh createUpdatesBranch SUBSCRIPTIONID`. This sets up a dedicated branch for dependency and upstream updates on the project.
+
+> **Note:** Repeat the steps above for each of the project you want to add to the fleet.
 
 ## Goals
 
@@ -61,8 +66,10 @@ In this demo, the upstream repository is a simple, single application Directus s
 Running `./fleet.sh`:
 
 - `list`: Lists all projects in the fleet.
-- `create PROJECT_TITLE`: Will create a new project with the name `Directus | PROJECT_TITLE`.
+- `new PROJECT_TITLE`: Will create a new project with the name `Directus | PROJECT_TITLE`.
 - `delete SUBSCRIPTION_ID`: Deletes project from the fleet, first providing a list to retrieve `SUBSCRIPTION_ID`.
 - `init SUBSCRIPTION_ID`: Initializes project with "Fleet template", first providing a list to retrieve `SUBSCRIPTION_ID`.
+- `initVars SUBSCRIPTION_ID`: Adds fleet environment variables to a project.
+- `redeploy SUBSCRIPTION_ID`: Saves changes from the initialization steps, completing a new running project.
 
 
