@@ -36,6 +36,10 @@ web:
     commands:
         start: npx directus start
 
+variables:
+    env:
+        DIRECTUS_UPSTREAM: 'https://github.com/chadwcarlson/directus-next'
+
 source:
     operations:
         npm-update:
