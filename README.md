@@ -1,5 +1,18 @@
 # directus-next for Platform.sh 
 
+
+In reality, this needs to be 
+
+1) split off into its own repository 
+2) needs to support a full-service (no external integration) and enterprise (white glove w/ development access via integrations)
+3) tests
+4) control.
+
+Managing multiple fleets at different "tiers":
+  - no integrated repository 
+  - enterprise with integrated repository
+
+
 This repo acts as a demo upstream for running Directus on Platform.sh. Updates to this repository will be accessible to any other project using it via Source Operations
 
 
