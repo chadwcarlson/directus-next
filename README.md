@@ -3,7 +3,20 @@
 This repo acts as a demo upstream for running Directus on Platform.sh. Updates to this repository will be accessible to any other project using it via Source Operations
 
 
+
+- Resources:
+
+  - They had mentioned having control over individual projects
+  - API Docs
+  - Direct to the POC demo
+  - within there is a subdir called `demo` with a script called `fleet.sh` -> contains all the API calls to manage a group of projects
+
+
 0. Get token - ./demo/get-token.sh
+
+
+
+
 
 
 
