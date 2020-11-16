@@ -1,4 +1,21 @@
 /**
+ * Returns a key/value object containing all variables relevant for the activity.
+ *
+ * That includes project level variables, plus any variables visible for
+ * the relevant environment for the activity, if any.
+ *
+ * Note that JSON-encoded values will show up as a string, and need to be
+ * decoded with JSON.parse().
+ */
+function variables() {
+    var vars = {};
+    activity.payload.deployment.variables.forEach(function(variable) {
+        vars[variable.name] = variable.value;
+    });
+    return vars;
+}
+
+/**
  * Sends a color-coded formatted message to Slack.
  *
  * You must first configure a Platform.sh variable named "SLACK_URL".
@@ -13,51 +30,45 @@
  *   The message body to send.
  */
 function sendSlackMessage(title, message) {
-
-    console.log((new Date).getDay());
-
-    if ((new Date).getDay() === 5) {
-        message += "\r\nOn a Friday! :calendar:";
-    }
-
-    var color = activity.result === 'success'
-        ? '#66c000'
-        : '#ff0000';
-
     var body = {
-        attachments: [{
-            title: title,
-            text: message,
-            color: color,
+        'attachments': [{
+            'title': title,
+            'text': message,
+            'color': 'good',
         }],
     };
-
     var url = variables()['SLACK_URL'];
-
     if (!url) {
         throw new Error('You must define a SLACK_URL project variable.');
     }
-
-    var resp = fetch(url, {
+    var resp = fetch(url,{
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(body),
     });
-
     if (!resp.ok) {
-        console.log("Sending slack message failed: " + resp.body.text());
+        console.log('[LOG] Sending slack message failed: ' + resp.body.text());
     }
 }
 
-function variables() {
-    var vars = {};
-    activity.payload.deployment.variables.forEach(function(variable) {
-        vars[variable.name] = variable.value;
+/**
+ * Extract the JSON output of 'composer outdated' as a nice formatted text.
+ *
+ * @param {json} npmDiff
+ *   The output of 'composer outdated --format json' command
+ */
+function extractDiff(cnpmDiff) {
+    var result = npmDiff.installed.map(function(i) { 
+        if (i['current'] == 'wanted') return '';
+        return '- Updated ' + i + ' (' + i.current+ ' => ' + i.wanted + '): ' + i['latest'] + '\n';
     });
-
-    return vars;
+    return result.join('');
 }
 
-sendSlackMessage(activity.text, activity.log);
+// @TODO: load it properly via a forEach() function. Currently it's hardcoded with the app name.
+var npmDiff = activity.payload.deployment.webapps.app.variables.env['NPM_DIFF'];
+var message = extractDiff(npmDiff);
+var title = 'NPM packages have been updated on the environment: "' + activity.payload.environment.name + '" (' + activity.payload.environment.project + ')';
+sendSlackMessage(title, message);
