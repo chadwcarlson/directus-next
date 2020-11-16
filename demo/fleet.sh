@@ -360,7 +360,7 @@ operation() {
         -d '{
             "operation": "npm-update"
         }' \
-        https://api.platform.sh/projects/$PROJECT_ID/environments/$FLEET_UPDATES_BRANCH/source_operation
+        https://api.platform.sh/projects/$PROJECT_ID/environments/$FLEET_UPDATES_BRANCH/source_operation)
 }
 # runSourceOperation(){
 
