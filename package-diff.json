@@ -1,0 +1,8 @@
+{
+  "directus": {
+    "current": "9.0.0-rc.2",
+    "wanted": "9.0.0-rc.13",
+    "latest": "9.0.0-rc.13",
+    "location": "node_modules/directus"
+  }
+}

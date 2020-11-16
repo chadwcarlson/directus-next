@@ -59,15 +59,24 @@ function sendSlackMessage(title, message) {
  * @param {json} npmDiff
  *   The output of 'composer outdated --format json' command
  */
-function extractDiff(cnpmDiff) {
-    var result = npmDiff.installed.map(function(i) { 
-        if (i['current'] == 'wanted') return '';
+function extractDiff(npmDiff) {
+    // console.log(JSON.stringify(npmDiff, null, 2));
+    // console.log(npmDiff)
+    Object.keys(npmDiff).forEach(function(key) {
+        var val = o[key];
+        console.log(key)
+      });
+    var result = npmDiff.map(function(i) { 
+        console.log(i)
+        if (i['current'] == i['wanted']) return '';
         return '- Updated ' + i + ' (' + i.current+ ' => ' + i.wanted + '): ' + i['latest'] + '\n';
     });
     return result.join('');
 }
 
 // @TODO: load it properly via a forEach() function. Currently it's hardcoded with the app name.
+console.log(JSON.stringify(activity, null, 2));
+
 var npmDiff = activity.payload.deployment.webapps.app.variables.env['NPM_DIFF'];
 var message = extractDiff(npmDiff);
 var title = 'NPM packages have been updated on the environment: "' + activity.payload.environment.name + '" (' + activity.payload.environment.project + ')';

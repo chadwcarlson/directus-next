@@ -335,7 +335,7 @@ addActivityScript() {
         -H "$HEADER" -H "$AUTH" \
         -d '{
             "type": "script",
-            "script": "./slack2.js",
+            "script": "./slack.js",
             "states": [
                 "complete"
             ],
@@ -355,12 +355,13 @@ operation() {
     PROJECT_UI=$(echo $PROJECT_INFO | jq -r '.project_ui')
 
     AUTH="Authorization: Bearer $(refreshOAuthToken)"
-    RESPONSE=$(curl -s -X POST \
+    RESPONSE=$(curl -X POST \
         -H "$HEADER" -H "$AUTH" \
         -d '{
             "operation": "npm-update"
         }' \
         https://api.platform.sh/projects/$PROJECT_ID/environments/$FLEET_UPDATES_BRANCH/source_operation)
+    echo $RESPONSE
 }
 # runSourceOperation(){
 

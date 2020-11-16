@@ -68,6 +68,7 @@ source:
                 set -e
                 npm install
                 npm outdated --json true > package-diff.json
+                npm update
                 git add package.json package-lock.json package-diff.json
                 STAGED_UPDATES=$(git diff --cached)
                 if [${STAGED_UPDATES} -gt 0]; then
