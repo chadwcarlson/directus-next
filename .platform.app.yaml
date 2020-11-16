@@ -41,16 +41,16 @@ variables:
         NPM_DIFF: 'package-diff.json'
         # DIRECTUS_UPSTREAM: 'https://github.com/chadwcarlson/directus-next'
 
-crons:
-    npm-update:
-        # Run the 'update' source operation every day at 1:00am.
-        spec: '0 5 * * *'
-        cmd: |
-            set -e
-            if [ "$PLATFORM_BRANCH" = directus-updates ]; then
-                platform environment:sync code data --no-wait --yes
-                platform source-operation:run npm-update --no-wait --yes
-            fi
+# crons:
+#     npm-update:
+#         # Run the 'update' source operation every day at 1:00am.
+#         spec: '0 5 * * *'
+#         cmd: |
+#             set -e
+#             if [ "$PLATFORM_BRANCH" = directus-updates ]; then
+#                 platform environment:sync code data --no-wait --yes
+#                 platform source-operation:run npm-update --no-wait --yes
+#             fi
     # upstream-update:
     #     # Run the 'update' source operation every day at 1:00am.
     #     spec: '0 5 * * *'
@@ -75,6 +75,7 @@ source:
                 else
                     echo "No staged commits."
                 end
+                
         # upstream-update:
         #     command: |
         #         set -e       
