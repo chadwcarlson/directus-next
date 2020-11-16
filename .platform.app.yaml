@@ -38,7 +38,7 @@ web:
 
 variables:
     env:
-        NPM_DIFF: 'package-diff.json'
+        NPM_DIFF: !include 'package-diff.json'
         # DIRECTUS_UPSTREAM: 'https://github.com/chadwcarlson/directus-next'
 
 # crons:
