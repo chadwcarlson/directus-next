@@ -40,5 +40,5 @@ initializeDB() {
 
 set -e
 
-restoreDevelopmentDirs
+# restoreDevelopmentDirs
 initializeDB
