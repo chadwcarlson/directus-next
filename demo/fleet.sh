@@ -347,6 +347,21 @@ addActivityScript() {
     # echo $RESPONSE | jq
 }
 
+
+operation() {
+    PROJECT_INFO=$(getProjectInfoFromSubscription $1)
+    PROJECT_TITLE=$(echo $PROJECT_INFO | jq -r '.project_title')
+    PROJECT_ID=$(echo $PROJECT_INFO | jq -r '.project_id')
+    PROJECT_UI=$(echo $PROJECT_INFO | jq -r '.project_ui')
+
+    AUTH="Authorization: Bearer $(refreshOAuthToken)"
+    RESPONSE=$(curl -s -X POST \
+        -H "$HEADER" -H "$AUTH" \
+        -d '{
+            "operation": "npm-update"
+        }' \
+        https://api.platform.sh/projects/$PROJECT_ID/environments/$FLEET_UPDATES_BRANCH/source_operation
+}
 # runSourceOperation(){
 
 # }
