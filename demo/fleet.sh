@@ -198,15 +198,6 @@ initMaster() {
 
 ############################################## DELETING PROJECTS ##############################################
 
-# Main delete function for projects in fleet.
-delete () {
-    if [[ $1 ]]; then
-        deleteProject $1
-    else
-        deletePrompt
-    fi
-}
-
 # Delete a Platform.sh project.
 deleteProject() {
     echo -e "\nDeleting subcription $1...\n"
