@@ -1,3 +1,13 @@
+# Directus template
+
+<p align="center">
+<a href="https://console.platform.sh/projects/create-project?template=https://github.com/chadwcarlson/directus-next.git">
+    <img src="https://platform.sh/images/deploy/lg-blue.svg" alt="Deploy on Platform.sh" width="180px" />
+</a>
+</p>
+
+
+
 Current Directus offering:
 
 - Self-Hosted
