@@ -1,3 +1,59 @@
+name: app
+
+type: nodejs:14
+
+variables:
+    env:
+        NPM_DIFF: !include 'package-diff.json'
+        DIRECTUS_UPSTREAM: 'https://github.com/chadwcarlson/directus-next'
+
+relationships:
+    database: "dbpostgres:postgresql"
+
+dependencies:
+    nodejs:
+        pg: "8.4.2"
+
+hooks:
+    build: !include
+        type: string
+        path: scripts/setup/build.sh
+    deploy: !include
+        type: string
+        path: scripts/setup/deploy.sh
+
+web:
+    commands:
+        start: npx directus start
+
+source:
+    operations:
+        npm-update:
+            command: !include
+                type: string
+                path: scripts/operations/npm-update.sh
+        upstream-update:
+            command: !include
+                type: string
+                path: scripts/operations/upstream-update.sh
+                
+        # upstream-update:
+        #     command: |
+        #         set -e   
+
+disk: 1024
+
+mounts:
+    'extensions':
+        source: local
+        source_path: extensions
+    'uploads':
+        source: local
+        source_path: uploads
+    'var':
+        source: local
+        source_path: var
+
 # This file describes an application. You can have multiple applications
 # in the same project.
 #
@@ -39,7 +95,7 @@ web:
 variables:
     env:
         NPM_DIFF: !include 'package-diff.json'
-        # DIRECTUS_UPSTREAM: 'https://github.com/chadwcarlson/directus-next'
+        DIRECTUS_UPSTREAM: 'https://github.com/chadwcarlson/directus-next'
 
 # crons:
 #     npm-update:

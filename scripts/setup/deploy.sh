@@ -38,7 +38,14 @@ initializeDB() {
     fi;
 }
 
+testSite() {
+    curl -I localhost:8055/ 2>/dev/null | head -n 1 | cut -d$' ' -f2 #302
+    curl -I localhost:8055/custom/hello 2>/dev/null | head -n 1 | cut -d$' ' -f2 #200
+    curl -I localhost:8055/ping 2>/dev/null | head -n 1 | cut -d$' ' -f2 #200/pong
+}
+
 set -e
 
 # restoreDevelopmentDirs
 initializeDB
+testSite

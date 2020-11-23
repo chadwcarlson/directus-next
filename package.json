@@ -10,6 +10,6 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "directus": "^9.0.0-rc.2"
+    "directus": "^9.0.0-rc.17"
   }
 }
