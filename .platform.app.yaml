@@ -43,129 +43,13 @@ source:
 
 disk: 1024
 
-mounts:
-    'extensions':
-        source: local
-        source_path: extensions
-    'uploads':
-        source: local
-        source_path: uploads
-    'var':
-        source: local
-        source_path: var
-
-# This file describes an application. You can have multiple applications
-# in the same project.
-#
-# See https://docs.platform.sh/configuration/app.html
-
-# The name of this app. Must be unique within a project.
-name: app
-
-# The runtime the application uses.
-type: nodejs:12
-
-# Build dependencies. 
-dependencies:
-    nodejs:
-        pg: "8.4.2"
-
-# The relationships of the application with services or other applications.
-#
-# The left-hand side is the name of the relationship as it will be exposed
-# to the application in the PLATFORM_RELATIONSHIPS variable. The right-hand
-# side is in the form `<service name>:<endpoint name>`.
-relationships:
-  database: "dbpostgres:postgresql"
-
-# The hooks that will be triggered when the package is deployed.
-hooks:
-    # Build hooks can modify the application files on disk but not access any services like databases.
-    build: !include
-        type: string
-        path: build.sh
-    deploy: !include
-        type: string
-        path: deploy.sh
-
-web:
-    commands:
-        start: npx directus start
-
-variables:
-    env:
-        NPM_DIFF: !include 'package-diff.json'
-        DIRECTUS_UPSTREAM: 'https://github.com/chadwcarlson/directus-next'
-
-# crons:
-#     npm-update:
-#         # Run the 'update' source operation every day at 1:00am.
-#         spec: '0 5 * * *'
-#         cmd: |
-#             set -e
-#             if [ "$PLATFORM_BRANCH" = directus-updates ]; then
-#                 platform environment:sync code data --no-wait --yes
-#                 platform source-operation:run npm-update --no-wait --yes
-#             fi
-    # upstream-update:
-    #     # Run the 'update' source operation every day at 1:00am.
-    #     spec: '0 5 * * *'
-    #     cmd: |
-    #         set -e
-    #         if [ "$PLATFORM_BRANCH" = directus-updates ]; then
-    #             platform environment:sync code data --no-wait --yes
-    #             platform source-operation:run upstream-update --no-wait --yes
-    #         fi
-
-source:
-    operations:
-        npm-update:
-            command: |
-                set -e
-                npm install
-                npm outdated --json true > package-diff.json
-                npm update
-                git add package.json package-lock.json package-diff.json
-                STAGED_UPDATES=$(git diff --cached)
-                if [${STAGED_UPDATES} -gt 0]; then
-                    git commit -m "Update npm dependencies and commit the diff to package-diff.json."    
-                else
-                    echo "No staged commits."
-                end
-                
-        # upstream-update:
-        #     command: |
-        #         set -e       
-
-
-# The size of the persistent disk of the application (in MB).
-disk: 1024
-
-mounts:
-    'extensions':
-        source: local
-        source_path: extensions
-    'uploads':
-        source: local
-        source_path: uploads
-    'var':
-        source: local
-        source_path: var
-    # 'extensions/displays':
-    #     source: local
-    #     source_path: displays
-    # 'extensions/endpoints':
-    #     source: local
-    #     source_path: endpoints
-    # 'extensions/hooks':
-    #     source: local
-    #     source_path: hooks
-    # 'extensions/interfaces':
-    #     source: local
-    #     source_path: interfaces
-    # 'extensions/layouts':
-    #     source: local
-    #     source_path: layouts
-    # 'extensions/modules':
-    #     source: local
-    #     source_path: modules
+# mounts:
+#     'extensions':
+#         source: local
+#         source_path: extensions
+#     'uploads':
+#         source: local
+#         source_path: uploads
+#     'var':
+#         source: local
+#         source_path: var
